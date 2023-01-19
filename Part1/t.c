@@ -63,23 +63,18 @@ int  printx(u32 x)
 }
 
 // prints an integer
-int  printd(int x)
+void printd(int x)
 {
+   BASE = 10;
    // first we need to determine if the integer is negative
    if (x < 0) 
    {
       // if the number is negative we need
       // to print a - in front of it
       putchar('-');
-      // lets make a new var that contains our x value but positive
-      int posX = -1 * x;
-      // since we now our number is less than zero NOT EQUAL to zero
-      // we call rpu directly, as all printu does in comparison
-      // is simply check that the number we pass is not = 0
-      // which we have already done
-      rpu(posX);
+      // lets x positive now
+      x = -1 * x;
    }
-   else
    // we now know x is not negative, but dont know two things:
    // 1) if x = 0
    // OR 2) if x > 0
@@ -92,8 +87,22 @@ int myprintf(char *fmt, ...)
    // set our current pointer
    char *cp = fmt;
    // set our initial pointer to the address of fmt + 1
+
+   /*
+                   char *cp -> "...%c ..%s ..%u .. %d\n"
+   HIGH               |                                              LOW 
+ --------------------------- --|------------------------------------------
+   | d | c | b | a | fmt |retPC| ebp | locals
+ ----------------|----------------|---------------------------------------
+                 |                | 
+            int *ip            CPU.ebp
+   */
+
+  // if we just set ip = to the address of fmt it will not be pointing
+  // to the first thing we need to have printed
    int *ip = &fmt + 1; 
 
+   // run until CP is null
    while(*cp != '\0')
    {
         // check our string to see if we have a percent sign
@@ -147,6 +156,8 @@ int myprintf(char *fmt, ...)
             // increase the initial pointer
             ip++;
         }
+        // if it is not a % but instead a new line
+        // print a new line then move the character back to the left
         else if (*cp == '\n')
         {
             // if our character is a new line,
@@ -155,6 +166,7 @@ int myprintf(char *fmt, ...)
             // and a extra \r per the instructions
             putchar('\r');
         }
+        // if its anything else just print it
         else 
         {
             // we know our character is not \n or %
@@ -171,13 +183,7 @@ int myprintf(char *fmt, ...)
 
 int main(int argc, char *argv[ ], char *env[ ])
 {
-
-// argc
-//myprintf("&argc=%d\n", argc);
-
-//myprintf("%c", 'T');
-//myprintf("%s", "Test");
-
-
+// test case
+/*WARNING: compile and print using WSL if you are using a 64 bit OS, will cause errors if run through vscode*/
 myprintf("char = %c string = %s dec %u hex = %x neg = %d\n", 'A', "Test", 100, 100, -100);
 }
