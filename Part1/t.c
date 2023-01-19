@@ -179,5 +179,5 @@ int main(int argc, char *argv[ ], char *env[ ])
 //myprintf("%s", "Test");
 
 
-myprintf("char = %c dec %u hex = %x neg = %d\n", 'A',  100, 100, -100);
+myprintf("char = %c string = %s dec %u hex = %x neg = %d\n", 'A', "Test", 100, 100, -100);
 }
