@@ -31,6 +31,13 @@ char *dev = "vdisk";
 int fd;
 
 // read a disk sector into char buf[512]
+int read_sector(int fd, int sector, char *buf)
+{
+    lseek(fd, sector*512, SEEK_SET);  // lssek to byte sector*512
+    read(fd, buf, 512);               // read 512 bytes into buf[ ]
+}
+
+// read a disk sector into char buf[512]
 int calc_end( struct partition *p)
 {
     (p->start_sector + p->nr_sectors) - 1;

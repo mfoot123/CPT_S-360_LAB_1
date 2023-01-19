@@ -151,5 +151,5 @@ int myprintf(char *fmt, ...)
 
 int main(void)
 {
-        puts("Hello, world!");
+        //puts("Hello, world!");
 }
