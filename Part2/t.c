@@ -79,7 +79,7 @@ int main()
             // lets define extStart as the start sector
             int extStart = p->start_sector;
             // print extStart to see it;
-            //printf("extStart: %d\n", extStart);
+            printf("extStart: %d\n", extStart);
             // set local MBR to extStart per the instructions
             int localMBR = extStart;
             // print to see
@@ -98,7 +98,8 @@ int main()
                 p = (struct partition *)&buf[0x1BE];
                 // print the entry count
                 printf("vdisk%d:                    |\n", partNum);
-                printf("Entry%d: Start Sector= %d | nr_sectors= %d\n", entryCount, p->start_sector + localMBR, p->nr_sectors);
+                printf("Entry%d: Start Sector = %d | nr_sectors = %d | sys_type = %d\n", 
+                entryCount, p->start_sector + localMBR, p->nr_sectors, p->sys_type);
                 // increase our number of entrys6
                 entryCount++;
                 // increase the partition count
