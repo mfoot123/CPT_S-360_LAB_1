@@ -31,56 +31,83 @@ char *dev = "vdisk";
 int fd;
 
 // read a disk sector into char buf[512]
-int read_sector(int fd, int sector, char *buf)
+int calc_end( struct partition *p)
 {
-        lseek(fd, sector*512, SEEK_SET);  // lssek to byte sector*512
-        read(fd, buf, 512);               // read 512 bytes into buf[ ]
+    (p->start_sector + p->nr_sectors) - 1;
 }
 
 int main()
 {
-        struct partition *p;
-        char buf[512];
+ struct partition *p;
+  char buf[512];
 
-        fd = open(dev, O_RDONLY);   // open dev for READ
-        read(fd, buf, 512);         // read 512 bytes of fd into buf[ ]
-        read_sector(fd, 0, buf);    // read in MBR at sector 0
+  fd = open(dev, O_RDONLY);   // open dev for READ
+  //read(fd, buf, 512);         // read 512 bytes of fd into buf[ ] 
+  read_sector(fd, 0, buf);    // read in MBR at sector 0 
 
-        /*
-          buf[ ] contains 512 bytes of MBR
-          -------------------------------------------------
-          |                                   P1 P2 P3 P4 |
-          ------------------------------------|------------
-          0                                 0x1BE
-        */
+    // set the value of the partition we are currently on
+    int partNum = 1;
 
-        /* Write C code to let p point at Partition 1 in buf[ ];  HOW? */
+    // Write C code to let p point at Partition 1 in buf[ ];
+    // cast into a pointer
+    p = (struct partition *)&buf[0x1BE];
 
-        /* print P1's start_sector, nr_sectors, sys_type;        SHOULD BE EASY */
+    printf("            |start sector|    |end sector|    |nr_sector|      |sys type| \n");
 
-        /* Write code to print all 4 partitions;                 HOW? */
+    // print P1's start_sector, nr_sectors, sys_type;
+        // Write code to print all 4 partitions;
+    while(p->sys_type != 0)
+    {
+        // print partitions
+        printf("vdisk%d :           ", partNum);
+        printf("%d            ", p->start_sector);
+        printf("%d              ", (p->start_sector + p->nr_sectors) - 1);
+        printf("%d                 ", p->nr_sectors);
+        printf("%x\n", p->sys_type);
+        // check for the extended partitions
+        if(p->sys_type == 5)
+        {
+            printf("-------------------Extended Partitions------------------\n");
+            // in order to  let  int extStart = P4's start_sector
+            // lets define extStart as the start sector
+            int extStart = p->start_sector;
+            // print extStart to see it;
+            //printf("extStart: %d\n", extStart);
+            // set local MBR to extStart per the instructions
+            int localMBR = extStart;
+            // print to see
+            //printf("next localMBR sector= %d\n", localMBR);
 
-
-        // ASSUME P4 is EXTEND type:
-
-        /*
-          Let  int extStart = P4's start_sector;
-          print extStart to see it;
-
-          int localMBR = extStart;
-          loop:
-          read_sector(fd, localMBR, buf);
-        */
-
-        // partition table of localMBR in buf[ ] has 2 entries:
-
-        /*
-          print entry 1's start_sector, nr_sector;
-          compute and print P5's begin, end, nr_sectors
-
-          if (entry 2's start_sector != 0){
-          compute and print next localMBR sector;
-          continue loop;
-          }
-        */
+            // extra variables
+            int entryCount = 1;
+            // increase our number of partitions now that we are in extended
+            ++partNum;
+            // loop:
+            while(p->sys_type != 0)
+            {
+                // read the sector
+                read_sector(fd, localMBR, buf);
+                // point p are partition 1
+                p = (struct partition *)&buf[0x1BE];
+                // print the entry count
+                printf("vdisk%d:                    |\n", partNum);
+                printf("Entry%d: Start Sector= %d | nr_sectors= %d\n", entryCount, p->start_sector + localMBR, p->nr_sectors);
+                // increase our number of entrys6
+                entryCount++;
+                // increase the partition count
+                ++partNum;
+                // move to next address
+                ++p;
+                // find the next localMBR by adding our extStart with the starting sector of p
+                localMBR = extStart +  p->start_sector;
+                // print out the next localMBR
+                //printf("Next local MBR sector: %d + %d = %d\n",extStart, p->start_sector, localMBR);
+            }
+        }
+        // move to the next address
+        // and increase the partition count
+        ++partNum;
+        ++p;
+    }
+    
 }
