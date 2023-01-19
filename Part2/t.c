@@ -97,9 +97,9 @@ int main()
                 // point p are partition 1
                 p = (struct partition *)&buf[0x1BE];
                 // print the entry count
-                printf("vdisk%d:                    |\n", partNum);
-                printf("Entry%d: Start Sector = %d | nr_sectors = %d | sys_type = %d\n", 
-                entryCount, p->start_sector + localMBR, p->nr_sectors, p->sys_type);
+                printf("vdisk%d:                     |                  |\n", partNum);
+                printf("Entry%d: Start Sector = %d | nr_sectors = %d | sys_type = %x\n", 
+                entryCount, p->start_sector + localMBR, (p->start_sector + p->nr_sectors) - 1, p->nr_sectors, p->sys_type);
                 // increase our number of entrys6
                 entryCount++;
                 // increase the partition count

@@ -26,15 +26,15 @@ int printu(u32 x)
 void prints(char *s)
 {
    // identify out starting index
-   int index = 0;
+   //int index = 0;
    // make sure we dont keep going past NULL
-   while(s[index] != NULL)
+   while(*s)
    {
       // loop through our character array
       // printing each character to the screen
-      putchar(s[index]);
+      putchar(*s);
       // increase out index by one
-      ++index;
+      s++;
    }
 }
 
@@ -92,7 +92,7 @@ int myprintf(char *fmt, ...)
    // set our current pointer
    char *cp = fmt;
    // set our initial pointer to the address of fmt + 1
-   int *ip = (int *)&fmt + 1; 
+   int *ip = &fmt + 1; 
 
    while(*cp != '\0')
    {
@@ -105,24 +105,44 @@ int myprintf(char *fmt, ...)
             // what print function we use
             cp++;
             if (*cp == 'c')
+            {
                // if its a character use put char
                putchar(*ip);
+               putchar('\r');
+               putchar('\n');
+            }
 
             else if (*cp == 's')
+            {
                // if its an s print the string
-               prints(*ip);
+               prints((char*)(*ip));
+               putchar('\r');
+               putchar('\n');
+            }
 
             else if(*cp == 'u')
+            {
                // if u print an unsigned integer
                printu(*ip);
+               putchar('\r');
+               putchar('\n');
+            }
 
             else if (*cp == 'x')
+            {
                // if x print in hex
                printx(*ip);
+               putchar('\r');
+               putchar('\n');
+            }
 
             else if (*cp == 'd')
+            {
                // if d print an integer
                printd(*ip);
+               putchar('\r');
+               putchar('\n');
+            }
 
             // increase the initial pointer
             ip++;
@@ -149,7 +169,15 @@ int myprintf(char *fmt, ...)
 /* int  printx(u32 x) which print x in HEX   (prefixed with 0x ) */
 /* int  printd(int x) which print an integer (x may be negative!!!) */
 
-int main(void)
+int main(int argc, char *argv[ ], char *env[ ])
 {
-        //puts("Hello, world!");
+
+// argc
+//myprintf("&argc=%d\n", argc);
+
+//myprintf("%c", 'T');
+//myprintf("%s", "Test");
+
+
+myprintf("char = %c dec %u hex = %x neg = %d\n", 'A',  100, 100, -100);
 }
