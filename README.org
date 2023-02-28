@@ -25,6 +25,8 @@ Given: putchar(char c) of Linux, which prints a char.
   * NOTE: This assignment is for 32-bit GCC, which passes parameters on stack.
   
   
+  
+  
 Part 2:
 
 Project Title: Partition Table
@@ -34,6 +36,8 @@ Project Description:
   * Wrote a C progrom to display the partition table of vdisk in:
       - Linux fdisk 'p' output form for the first 4 partitions
       - Linux fdisk 'p' output form including ALL the extend partitions 
+
+
 
 
 
