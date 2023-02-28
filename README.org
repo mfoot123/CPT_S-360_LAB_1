@@ -1,4 +1,4 @@
-Part 1:
+~Part 1:~
 
 Project Title: MyPrintf
 
@@ -27,7 +27,7 @@ Given: putchar(char c) of Linux, which prints a char.
   
   
   
-Part 2:
+~Part 2:~
 
 Project Title: Partition Table
 
